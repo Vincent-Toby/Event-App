@@ -7,7 +7,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -49,30 +49,30 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
+  --background: #FFFFFF;
+  --foreground: #1F1D3D;
+  --card: #FFFFFF;
+  --card-foreground: #1F1D3D;
+  --popover: #FFFFFF;
+  --popover-foreground: #1F1D3D;
+  --primary: #BF1A2F;
+  --primary-foreground: #FFFFFF;
+  --secondary: #E8EDFA;
+  --secondary-foreground: #2F3680;
+  --muted: #F4F5FA;
+  --muted-foreground: #5E6180;
+  --accent: #EEF1FB;
+  --accent-foreground: #1F1D3D;
+  --destructive: #B91C1C;
+  --border: #E2E4F0;
+  --input: #D3D7EA;
+  --ring: #454E9E;
+  --chart-1: #BF1A2F;
+  --chart-2: #454E9E;
+  --chart-3: #F5CB5C;
+  --chart-4: #89AAE6;
+  --chart-5: #C98CA7;
+  --radius: 0.75rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -126,5 +126,8 @@
   }
   html {
     @apply font-sans;
+  }
+  h1, h2, h3 {
+    @apply font-extrabold tracking-tight;
   }
 }
