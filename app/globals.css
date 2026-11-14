@@ -131,3 +131,11 @@
     @apply font-extrabold tracking-tight;
   }
 }
+
+@theme {
+  --color-brand-red: #BF1A2F;
+  --color-brand-pink: #C98CA7;
+  --color-brand-indigo: #454E9E;
+  --color-brand-yellow: #F5CB5C;
+  --color-brand-blue: #89AAE6;
+}

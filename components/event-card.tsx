@@ -22,10 +22,10 @@ export type EventCardData = {
 };
 
 const badgeStyles: Record<EventBadge["tone"], string> = {
-  danger: "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-200",
-  warning: "bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-200",
-  info: "bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-200",
-  success: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200",
+  danger: "bg-primary text-primary-foreground",
+  warning: "bg-brand-yellow text-foreground",
+  info: "bg-brand-indigo text-white",
+  success: "bg-brand-blue/30 text-foreground",
 };
 
 export function EventCard({ event, now }: { event: EventCardData; now: Date }) {
@@ -48,21 +48,21 @@ export function EventCard({ event, now }: { event: EventCardData; now: Date }) {
       <div className="space-y-1">
         {badge && (
           <span
-            className={`inline-block rounded-md px-2 py-1 text-xs font-medium ${badgeStyles[badge.tone]}`}
+            className={`inline-block rounded-md px-2 py-1 text-xs font-semibold ${badgeStyles[badge.tone]}`}
           >
             {badge.label}
           </span>
         )}
-        <h3 className="line-clamp-2 text-lg font-semibold leading-snug">
+        <h3 className="line-clamp-2 text-lg font-bold leading-snug">
           {event.title}
         </h3>
-        <p className="text-sm font-medium">
+        <p className="text-sm font-semibold">
           {formatEventDate(event.startsAt, now)}
         </p>
         <p className="truncate text-sm text-muted-foreground">
           {event.isOnline ? "Online" : event.venue}
         </p>
-        <p className="text-sm font-semibold">
+        <p className="text-sm font-bold">
           {formatPrice(event.price, event.currency)}
         </p>
       </div>
