@@ -47,7 +47,7 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
   }
 
   return (
-    <Card className="mx-auto mt-20 w-full max-w-sm">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>{isSignUp ? "Create account" : "Welcome back"}</CardTitle>
         <CardDescription>
