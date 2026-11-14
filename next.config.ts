@@ -4,9 +4,15 @@ const nextConfig: NextConfig = {
   /* config options here */
   experimental: {
     agentFeedback: true,
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
   },
   cacheComponents: true,
   partialPrefetching: true,
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }],
+  },
   turbopack: {
     rules: {
       "*.css": {
