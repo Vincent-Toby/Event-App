@@ -28,6 +28,18 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum EventCategory {
+  MUSIC
+  NIGHTLIFE
+  ARTS
+  HOLIDAYS
+  DATING
+  HOBBIES
+  BUSINESS
+  FOOD_DRINK
+  TECH
+}
+
 model User {
   id            String    @id
   name          String
@@ -103,6 +115,7 @@ model Event {
   city        String?
   isOnline    Boolean     @default(false)
   tags        String[]
+  category    EventCategory
   startsAt    DateTime
   endsAt      DateTime?
   capacity    Int? // null means unlimited
@@ -117,6 +130,7 @@ model Event {
 
   @@index([startsAt])
   @@index([organizerId])
+  @@index([category])
   @@map("event")
 }
 
