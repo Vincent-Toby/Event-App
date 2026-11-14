@@ -1,14 +1,18 @@
+import { EventForm } from "@/components/event-form";
 import { requireUser } from "@/lib/session";
 
 export default async function NewEventPage() {
-  const user = await requireUser();
+  await requireUser();
 
   return (
-    <div className="space-y-2">
-      <h1 className="text-2xl font-semibold tracking-tight">Create event</h1>
-      <p className="text-sm text-muted-foreground">
-        Logged in as {user.email}
-      </p>
+    <div className="mx-auto w-full max-w-2xl space-y-6">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-semibold tracking-tight">Create event</h1>
+        <p className="text-sm text-muted-foreground">
+          Add the details people need to find and book your event.
+        </p>
+      </div>
+      <EventForm />
     </div>
   );
 }
