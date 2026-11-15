@@ -16,6 +16,11 @@ function readEventId(formData: FormData) {
   return value && value.length <= 60 ? value : null;
 }
 
+// Refreshes every page and the header, so the My bookings count updates right away.
+function refreshEverything() {
+  revalidatePath("/", "layout");
+}
+
 export async function bookEventAction(
   _prev: BookingActionState,
   formData: FormData,
@@ -30,8 +35,7 @@ export async function bookEventAction(
     const result = await createBooking(session.user.id, eventId, new Date());
     if (!result.ok) return { error: result.error };
 
-    revalidatePath(`/events/${result.slug}`);
-    revalidatePath("/bookings");
+    refreshEverything();
     return { message: result.message };
   } catch (error) {
     console.error("bookEventAction failed", error);
@@ -53,8 +57,7 @@ export async function cancelBookingAction(
     const result = await cancelBooking(session.user.id, eventId, new Date());
     if (!result.ok) return { error: result.error };
 
-    revalidatePath(`/events/${result.slug}`);
-    revalidatePath("/bookings");
+    refreshEverything();
     return { message: result.message };
   } catch (error) {
     console.error("cancelBookingAction failed", error);

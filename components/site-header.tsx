@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { CalendarDays } from "lucide-react";
 import { getSession } from "@/lib/session";
+import { getUpcomingBookingCount } from "@/lib/booking-count";
 import { MobileMenu } from "@/components/mobile-menu";
+import { MyBookingsLink } from "@/components/my-bookings-link";
 import { SearchBox } from "@/components/search-box";
 import { UserMenu } from "@/components/user-menu";
 import { Button } from "@/components/ui/button";
@@ -12,6 +14,10 @@ export async function SiteHeader() {
   const menuUser = user
     ? { name: user.name, email: user.email, image: user.image ?? null }
     : null;
+  // Read the time after the session so the page can still be prepared in advance.
+  const upcomingCount = user
+    ? await getUpcomingBookingCount(user.id, new Date())
+    : 0;
 
   return (
     <header className="border-b bg-background">
@@ -26,13 +32,17 @@ export async function SiteHeader() {
         <SearchBox className="order-last w-full md:order-none md:max-w-xl md:flex-1" />
 
         <nav className="ml-auto hidden items-center gap-2 md:flex">
-          <Button
-            variant="ghost"
-            nativeButton={false}
-            render={<Link href="/" />}
-          >
-            Find events
-          </Button>
+          {menuUser ? (
+            <MyBookingsLink count={upcomingCount} />
+          ) : (
+            <Button
+              variant="ghost"
+              nativeButton={false}
+              render={<Link href="/" />}
+            >
+              Find events
+            </Button>
+          )}
           <Button nativeButton={false} render={<Link href="/events/new" />}>
             Create event
           </Button>
@@ -50,7 +60,7 @@ export async function SiteHeader() {
         </nav>
 
         <div className="ml-auto md:hidden">
-          <MobileMenu user={menuUser} />
+          <MobileMenu user={menuUser} upcomingCount={upcomingCount} />
         </div>
       </div>
     </header>

@@ -1,7 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { LogIn, LogOut, Menu, Plus, Search, UserPlus } from "lucide-react";
+import {
+  LogIn,
+  LogOut,
+  Menu,
+  Plus,
+  Search,
+  Ticket,
+  UserPlus,
+} from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,10 +24,13 @@ import {
 
 type MobileMenuProps = {
   user: { name: string; email: string; image: string | null } | null;
+  upcomingCount?: number;
 };
 
-export function MobileMenu({ user }: MobileMenuProps) {
+export function MobileMenu({ user, upcomingCount = 0 }: MobileMenuProps) {
   const router = useRouter();
+  const showBadge = user !== null && upcomingCount > 0;
+  const badgeText = upcomingCount > 9 ? "9+" : String(upcomingCount);
 
   async function handleSignOut() {
     await authClient.signOut();
@@ -30,9 +41,25 @@ export function MobileMenu({ user }: MobileMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={<Button variant="ghost" size="icon" aria-label="Open menu" />}
+        render={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            aria-label={
+              showBadge
+                ? `Open menu, ${upcomingCount} upcoming ${upcomingCount === 1 ? "booking" : "bookings"}`
+                : "Open menu"
+            }
+          />
+        }
       >
         <Menu className="size-5" />
+        {showBadge && (
+          <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[11px] font-bold text-primary-foreground">
+            {badgeText}
+          </span>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         {user && (
@@ -52,6 +79,17 @@ export function MobileMenu({ user }: MobileMenuProps) {
           <Search />
           Find events
         </DropdownMenuItem>
+        {user && (
+          <DropdownMenuItem onClick={() => router.push("/bookings")}>
+            <Ticket />
+            My bookings
+            {upcomingCount > 0 && (
+              <span className="ml-auto rounded-full bg-primary px-2 py-0.5 text-xs font-bold text-primary-foreground">
+                {badgeText}
+              </span>
+            )}
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={() => router.push("/events/new")}>
           <Plus />
           Create event
