@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import {
+  CalendarCheck,
   LogIn,
   LogOut,
   Menu,
@@ -80,15 +81,21 @@ export function MobileMenu({ user, upcomingCount = 0 }: MobileMenuProps) {
           Find events
         </DropdownMenuItem>
         {user && (
-          <DropdownMenuItem onClick={() => router.push("/bookings")}>
-            <Ticket />
-            My bookings
-            {upcomingCount > 0 && (
-              <span className="ml-auto rounded-full bg-primary px-2 py-0.5 text-xs font-bold text-primary-foreground">
-                {badgeText}
-              </span>
-            )}
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuItem onClick={() => router.push("/bookings")}>
+              <Ticket />
+              My bookings
+              {upcomingCount > 0 && (
+                <span className="ml-auto rounded-full bg-primary px-2 py-0.5 text-xs font-bold text-primary-foreground">
+                  {badgeText}
+                </span>
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/my-events")}>
+              <CalendarCheck />
+              My events
+            </DropdownMenuItem>
+          </>
         )}
         <DropdownMenuItem onClick={() => router.push("/events/new")}>
           <Plus />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { LogOut, Plus, Ticket } from "lucide-react";
+import { CalendarCheck, LogOut, Plus, Ticket } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -65,6 +65,10 @@ export function UserMenu({ user }: UserMenuProps) {
         <DropdownMenuItem onClick={() => router.push("/bookings")}>
           <Ticket />
           My bookings
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push("/my-events")}>
+          <CalendarCheck />
+          My events
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => router.push("/events/new")}>
           <Plus />
