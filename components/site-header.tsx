@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { CalendarDays } from "lucide-react";
 import { getSession } from "@/lib/session";
 import { getUpcomingBookingCount } from "@/lib/booking-count";
+import { BrandLogo } from "@/components/brand-logo";
 import { MobileMenu } from "@/components/mobile-menu";
 import { MyBookingsLink } from "@/components/my-bookings-link";
 import { SearchBox } from "@/components/search-box";
@@ -22,12 +22,7 @@ export async function SiteHeader() {
   return (
     <header className="border-b bg-background">
       <div className="mx-auto flex min-h-16 w-full max-w-7xl flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3 md:flex-nowrap md:px-6">
-        <Link href="/" className="flex shrink-0 items-center gap-2 font-bold">
-          <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <CalendarDays className="size-4" />
-          </span>
-          <span>Event App</span>
-        </Link>
+        <BrandLogo />
 
         <SearchBox className="order-last w-full md:order-none md:max-w-xl md:flex-1" />
 

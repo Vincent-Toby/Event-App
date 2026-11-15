@@ -4,7 +4,6 @@ import Link from "next/link";
 import { startTransition, useActionState, useState } from "react";
 import {
   CalendarClock,
-  CalendarDays,
   ImagePlus,
   MapPin,
   Monitor,
@@ -16,6 +15,7 @@ import {
 } from "@/app/(create)/events/new/actions";
 import { CATEGORY_LABELS, EVENT_CATEGORIES } from "@/lib/event-categories";
 import { cn } from "@/lib/utils";
+import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -161,12 +161,7 @@ export function EventForm() {
 
       <div className="relative z-10">
         <header className="px-6 py-5">
-          <Link href="/" className="inline-flex items-center gap-2 text-lg font-bold">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <CalendarDays className="size-4" />
-            </span>
-            Event App
-          </Link>
+          <BrandLogo />
         </header>
 
         <div className="mx-auto w-full max-w-2xl space-y-12 px-6 pb-40 pt-8">
