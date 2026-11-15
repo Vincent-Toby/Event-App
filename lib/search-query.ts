@@ -1,6 +1,6 @@
 import type { Prisma } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import type { EventCardData } from "@/components/event-card";
+import type { EventRowData } from "@/components/event-row";
 import type { BrowseFilters } from "@/lib/browse-params";
 import {
   CATEGORY_LABELS,
@@ -15,6 +15,7 @@ const CANDIDATE_LIMIT = 500;
 const MAX_EXACT = 48;
 const MAX_RELATED = 24;
 const MAX_FALLBACK = 8;
+const SUMMARY_LENGTH = 140;
 
 function upcomingWhere(now: Date): Prisma.EventWhereInput {
   return {
@@ -23,17 +24,25 @@ function upcomingWhere(now: Date): Prisma.EventWhereInput {
   };
 }
 
+// A short plain-text preview of the description for the results list.
+function makeSummary(description: string) {
+  const flat = description.replace(/\s+/g, " ").trim();
+  return flat.length > SUMMARY_LENGTH
+    ? `${flat.slice(0, SUMMARY_LENGTH).trimEnd()}…`
+    : flat;
+}
+
 export type SearchResults = {
   // The words that were searched, for display.
   terms: string[];
   // Events that matched every word.
-  exact: EventCardData[];
+  exact: EventRowData[];
   // Events that matched some of the words.
-  related: EventCardData[];
+  related: EventRowData[];
   // The words the related events matched.
   relatedTerms: string[];
   // Upcoming events, only filled when nothing matched at all.
-  fallback: EventCardData[];
+  fallback: EventRowData[];
 };
 
 export async function searchEvents(
@@ -77,7 +86,7 @@ export async function searchEvents(
     },
   });
 
-  const toCard = (item: (typeof candidates)[number]): EventCardData => ({
+  const toRow = (item: (typeof candidates)[number]): EventRowData => ({
     slug: item.slug,
     title: item.title,
     imageUrl: item.imageUrl,
@@ -89,6 +98,9 @@ export async function searchEvents(
     currency: item.currency,
     capacity: item.capacity,
     confirmedCount: item._count.bookings,
+    organizerName: item.organizer.name,
+    city: item.city,
+    summary: makeSummary(item.description),
   });
 
   const terms = tokenize(filters.q);
@@ -97,7 +109,7 @@ export async function searchEvents(
   if (terms.length === 0) {
     return {
       terms: [],
-      exact: candidates.slice(0, MAX_EXACT).map(toCard),
+      exact: candidates.slice(0, MAX_EXACT).map(toRow),
       related: [],
       relatedTerms: [],
       fallback: [],
@@ -142,12 +154,12 @@ export async function searchEvents(
 
   return {
     terms: terms.map((term) => term.word),
-    exact: exact.map((entry) => toCard(entry.item)),
-    related: related.map((entry) => toCard(entry.item)),
+    exact: exact.map((entry) => toRow(entry.item)),
+    related: related.map((entry) => toRow(entry.item)),
     relatedTerms,
     fallback:
       exact.length === 0 && related.length === 0
-        ? candidates.slice(0, MAX_FALLBACK).map(toCard)
+        ? candidates.slice(0, MAX_FALLBACK).map(toRow)
         : [],
   };
 }

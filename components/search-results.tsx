@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { SearchX } from "lucide-react";
-import { EventCard, type EventCardData } from "@/components/event-card";
+import { EventRow, type EventRowData } from "@/components/event-row";
 import {
   SearchFiltersChips,
   SearchFiltersSidebar,
@@ -13,11 +13,11 @@ import { searchEvents } from "@/lib/search-query";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-function EventGrid({ events, now }: { events: EventCardData[]; now: Date }) {
+function EventList({ events, now }: { events: EventRowData[]; now: Date }) {
   return (
-    <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="space-y-4">
       {events.map((event) => (
-        <EventCard key={event.slug} event={event} now={now} />
+        <EventRow key={event.slug} event={event} now={now} />
       ))}
     </div>
   );
@@ -69,7 +69,7 @@ export async function SearchResults({
         <div className="space-y-12">
           {results.exact.length > 0 && (
             <section>
-              <EventGrid events={results.exact} now={now} />
+              <EventList events={results.exact} now={now} />
             </section>
           )}
 
@@ -92,7 +92,7 @@ export async function SearchResults({
                   </p>
                 </div>
               )}
-              <EventGrid events={results.related} now={now} />
+              <EventList events={results.related} now={now} />
             </section>
           )}
 
@@ -135,7 +135,7 @@ export async function SearchResults({
               {results.fallback.length > 0 && (
                 <div className="space-y-6">
                   <h2 className="text-2xl">Upcoming events you might like</h2>
-                  <EventGrid events={results.fallback} now={now} />
+                  <EventList events={results.fallback} now={now} />
                 </div>
               )}
             </section>
@@ -156,13 +156,19 @@ export function SearchSkeleton() {
             <Skeleton key={i} className="h-9 w-full" />
           ))}
         </div>
-        <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="space-y-3">
+        <div className="space-y-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="grid gap-4 rounded-2xl border p-3 sm:grid-cols-[14rem_minmax(0,1fr)] md:grid-cols-[16rem_minmax(0,1fr)_9rem]"
+            >
               <Skeleton className="aspect-video w-full rounded-xl" />
-              <Skeleton className="h-5 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-4 w-1/3" />
+              <div className="space-y-3">
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+                <Skeleton className="h-4 w-2/3" />
+              </div>
+              <Skeleton className="hidden h-12 w-24 md:block" />
             </div>
           ))}
         </div>
