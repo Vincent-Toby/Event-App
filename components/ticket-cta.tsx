@@ -1,30 +1,65 @@
 import Link from "next/link";
+import { BookingControls } from "@/components/booking-controls";
 import { Button } from "@/components/ui/button";
 import type { BookingState } from "@/lib/event-availability";
 
-const DISABLED_LABELS: Record<Exclude<BookingState, "open">, string> = {
-  cancelled: "Event cancelled",
-  ended: "Event ended",
-  sold_out: "Sold out",
-};
-
 type TicketCtaProps = {
+  eventId: string;
   bookingState: BookingState;
+  bookingStatus: "CONFIRMED" | "CANCELLED" | null;
   isLoggedIn: boolean;
   isOrganizer: boolean;
+  isPaid: boolean;
+  canCancel: boolean;
+  compact?: boolean;
   className?: string;
 };
 
 export function TicketCta({
+  eventId,
   bookingState,
+  bookingStatus,
   isLoggedIn,
   isOrganizer,
+  isPaid,
+  canCancel,
+  compact = false,
   className,
 }: TicketCtaProps) {
-  if (bookingState !== "open") {
+  if (bookingState === "cancelled") {
     return (
       <Button disabled className={className}>
-        {DISABLED_LABELS[bookingState]}
+        Event cancelled
+      </Button>
+    );
+  }
+
+  const isBooked = isLoggedIn && bookingStatus === "CONFIRMED";
+
+  if (isBooked && bookingState !== "ended") {
+    return (
+      <BookingControls
+        eventId={eventId}
+        isBooked
+        canCancel={canCancel}
+        compact={compact}
+        className={className}
+      />
+    );
+  }
+
+  if (bookingState === "ended") {
+    return (
+      <Button disabled className={className}>
+        Event ended
+      </Button>
+    );
+  }
+
+  if (bookingState === "sold_out") {
+    return (
+      <Button disabled className={className}>
+        Sold out
       </Button>
     );
   }
@@ -49,10 +84,21 @@ export function TicketCta({
     );
   }
 
-  // The booking step replaces this placeholder button.
+  if (isPaid) {
+    return (
+      <Button disabled className={className}>
+        Payments coming soon
+      </Button>
+    );
+  }
+
   return (
-    <Button disabled className={className}>
-      Book now
-    </Button>
+    <BookingControls
+      eventId={eventId}
+      isBooked={false}
+      canCancel={canCancel}
+      compact={compact}
+      className={className}
+    />
   );
 }

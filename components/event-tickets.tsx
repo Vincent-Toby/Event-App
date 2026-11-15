@@ -8,8 +8,10 @@ type TicketProps = {
   event: EventDetail;
   now: Date;
   bookingState: BookingState;
+  bookingStatus: "CONFIRMED" | "CANCELLED" | null;
   isLoggedIn: boolean;
   isOrganizer: boolean;
+  canCancel: boolean;
 };
 
 function SpotsNote({ left }: { left: number | null }) {
@@ -34,8 +36,10 @@ export function TicketCard({
   event,
   now,
   bookingState,
+  bookingStatus,
   isLoggedIn,
   isOrganizer,
+  canCancel,
 }: TicketProps) {
   const left = getSpotsLeft(event.capacity, event.confirmedCount);
 
@@ -56,9 +60,13 @@ export function TicketCard({
         <SpotsNote left={left} />
       </div>
       <TicketCta
+        eventId={event.id}
         bookingState={bookingState}
+        bookingStatus={bookingStatus}
         isLoggedIn={isLoggedIn}
         isOrganizer={isOrganizer}
+        isPaid={event.price > 0}
+        canCancel={canCancel}
         className="h-12 w-full text-base font-semibold"
       />
     </div>
@@ -70,8 +78,10 @@ export function TicketBar({
   event,
   now,
   bookingState,
+  bookingStatus,
   isLoggedIn,
   isOrganizer,
+  canCancel,
 }: TicketProps) {
   return (
     <div className="fixed inset-x-0 bottom-0 z-30 border-t bg-background pb-[env(safe-area-inset-bottom)] lg:hidden">
@@ -85,9 +95,14 @@ export function TicketBar({
           </p>
         </div>
         <TicketCta
+          eventId={event.id}
           bookingState={bookingState}
+          bookingStatus={bookingStatus}
           isLoggedIn={isLoggedIn}
           isOrganizer={isOrganizer}
+          isPaid={event.price > 0}
+          canCancel={canCancel}
+          compact
           className="h-12 shrink-0 px-6 text-base font-semibold"
         />
       </div>

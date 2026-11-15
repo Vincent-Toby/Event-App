@@ -10,6 +10,7 @@ import {
 } from "@/components/event-details";
 import { EventPageSkeleton } from "@/components/event-page-skeleton";
 import { TicketBar, TicketCard } from "@/components/event-tickets";
+import { getBookingStatus } from "@/lib/booking";
 import { getBookingState } from "@/lib/event-availability";
 import { getEventBySlug, getSimilarEvents } from "@/lib/event-detail";
 import { getSession } from "@/lib/session";
@@ -33,14 +34,23 @@ async function EventContent({
 
   const now = new Date();
   const bookingState = getBookingState(event, now);
-  const similar = await getSimilarEvents(event, now);
+
+  const [similar, bookingStatus] = await Promise.all([
+    getSimilarEvents(event, now),
+    viewerId
+      ? getBookingStatus(viewerId, event.id)
+      : Promise.resolve<"CONFIRMED" | "CANCELLED" | null>(null),
+  ]);
 
   const ticketProps = {
     event,
     now,
     bookingState,
+    bookingStatus,
     isLoggedIn: viewerId !== null,
     isOrganizer,
+    // A booking can be cancelled until the event starts.
+    canCancel: event.startsAt.getTime() > now.getTime(),
   };
 
   return (
