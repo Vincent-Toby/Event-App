@@ -1,28 +1,10 @@
-import Form from "next/form";
 import Link from "next/link";
-import { CalendarDays, Search } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import { getSession } from "@/lib/session";
 import { MobileMenu } from "@/components/mobile-menu";
+import { SearchBox } from "@/components/search-box";
 import { UserMenu } from "@/components/user-menu";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
-function SearchForm({ className }: { className?: string }) {
-  return (
-    <Form action="/" role="search" className={className}>
-      <div className="relative">
-        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          name="q"
-          type="search"
-          placeholder="Search events"
-          aria-label="Search events"
-          className="h-10 rounded-full pl-9"
-        />
-      </div>
-    </Form>
-  );
-}
 
 export async function SiteHeader() {
   const session = await getSession();
@@ -33,7 +15,7 @@ export async function SiteHeader() {
 
   return (
     <header className="border-b bg-background">
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-4 px-4 md:px-6">
+      <div className="mx-auto flex min-h-16 w-full max-w-7xl flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3 md:flex-nowrap md:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-2 font-bold">
           <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <CalendarDays className="size-4" />
@@ -41,7 +23,7 @@ export async function SiteHeader() {
           <span>Event App</span>
         </Link>
 
-        <SearchForm className="hidden max-w-md flex-1 md:block" />
+        <SearchBox className="order-last w-full md:order-none md:max-w-xl md:flex-1" />
 
         <nav className="ml-auto hidden items-center gap-2 md:flex">
           <Button
@@ -70,10 +52,6 @@ export async function SiteHeader() {
         <div className="ml-auto md:hidden">
           <MobileMenu user={menuUser} />
         </div>
-      </div>
-
-      <div className="border-t px-4 py-2 md:hidden">
-        <SearchForm />
       </div>
     </header>
   );
