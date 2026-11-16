@@ -1,16 +1,22 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { AttendeeList } from "@/components/attendee-list";
 import { EventDangerZone } from "@/components/event-danger-zone";
+import { LogoLoader } from "@/components/logo-loader";
 import { ManageEventForm } from "@/components/manage-event-form";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { getSpotsLeft } from "@/lib/event-availability";
 import { formatPrice } from "@/lib/event-utils";
 import { getAttendees, getManagedEvent } from "@/lib/organizer";
 import { requireUser } from "@/lib/session";
+
+export const metadata: Metadata = {
+  title: "Manage event",
+  robots: { index: false, follow: false },
+};
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
@@ -154,20 +160,7 @@ export default function ManagePage({
   params: Promise<{ slug: string }>;
 }) {
   return (
-    <Suspense
-      fallback={
-        <div className="mx-auto w-full max-w-3xl space-y-6">
-          <Skeleton className="h-5 w-24" />
-          <Skeleton className="h-10 w-2/3" />
-          <div className="grid gap-4 sm:grid-cols-3">
-            <Skeleton className="h-20 w-full rounded-2xl" />
-            <Skeleton className="h-20 w-full rounded-2xl" />
-            <Skeleton className="h-20 w-full rounded-2xl" />
-          </div>
-          <Skeleton className="h-96 w-full rounded-2xl" />
-        </div>
-      }
-    >
+    <Suspense fallback={<LogoLoader label="Loading event" />}>
       <ManageContent params={params} />
     </Suspense>
   );

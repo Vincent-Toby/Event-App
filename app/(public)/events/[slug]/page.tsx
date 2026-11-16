@@ -8,8 +8,8 @@ import {
   EventStatusBanner,
   SimilarEvents,
 } from "@/components/event-details";
-import { EventPageSkeleton } from "@/components/event-page-skeleton";
 import { TicketBar, TicketCard } from "@/components/event-tickets";
+import { LogoLoader } from "@/components/logo-loader";
 import { getBookingStatus } from "@/lib/booking";
 import { getBookingState } from "@/lib/event-availability";
 import { getEventBySlug, getSimilarEvents } from "@/lib/event-detail";
@@ -87,7 +87,7 @@ export default function EventPage({
   params: Promise<{ slug: string }>;
 }) {
   return (
-    <Suspense fallback={<EventPageSkeleton />}>
+    <Suspense fallback={<LogoLoader label="Loading event" />}>
       <EventContent params={params} />
     </Suspense>
   );

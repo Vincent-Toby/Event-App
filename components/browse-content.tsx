@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { parseBrowseParams, type BrowseFilters } from "@/lib/browse-params";
 import { CATEGORY_LABELS } from "@/lib/event-categories";
 import { getBrowseEvents } from "@/lib/events-query";
+import { connection } from "next/server";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -26,6 +27,7 @@ export async function BrowseContent({
 }) {
   // Reading searchParams first is what allows us to read the current time below.
   const filters = parseBrowseParams(await searchParams);
+  await connection();
   const now = new Date();
   const events = await getBrowseEvents(filters, now);
   const hasFilters =
