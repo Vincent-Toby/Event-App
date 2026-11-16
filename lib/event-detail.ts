@@ -21,6 +21,8 @@ export type EventDetail = {
   currency: string;
   status: EventStatusValue;
   createdAt: Date;
+  dateChangedAt: Date | null;
+  previousStartsAt: Date | null;
   organizerId: string;
   organizerName: string;
   organizerImage: string | null;
@@ -53,6 +55,8 @@ export async function getEventBySlug(slug: string): Promise<EventDetail | null> 
       currency: true,
       status: true,
       createdAt: true,
+      dateChangedAt: true,
+      previousStartsAt: true,
       organizerId: true,
       // Never select the organizer's email here.
       organizer: { select: { name: true, image: true } },
@@ -93,6 +97,7 @@ export async function getSimilarEvents(
       isOnline: true,
       startsAt: true,
       createdAt: true,
+      dateChangedAt: true,
       price: true,
       currency: true,
       capacity: true,

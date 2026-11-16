@@ -15,6 +15,7 @@ export type EventCardData = {
   isOnline: boolean;
   startsAt: Date;
   createdAt: Date;
+  dateChangedAt: Date | null;
   price: number;
   currency: string;
   capacity: number | null;

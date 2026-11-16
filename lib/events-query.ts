@@ -54,6 +54,7 @@ export async function getBrowseEvents(
       isOnline: true,
       startsAt: true,
       createdAt: true,
+      dateChangedAt: true,
       price: true,
       currency: true,
       capacity: true,

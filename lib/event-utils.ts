@@ -1,3 +1,5 @@
+import { isDateChanged } from "@/lib/date-changed";
+
 // The app shows and filters times in this timezone.
 // Africa/Lagos is UTC+1 with no daylight saving. If you change the timezone,
 // update the offset too (it is only used by the Today / This weekend filters).
@@ -79,17 +81,27 @@ export function getEventBadge(
     confirmedCount: number;
     startsAt: Date;
     createdAt: Date;
+    dateChangedAt?: Date | null;
   },
   now: Date,
 ): EventBadge | null {
-  if (event.capacity !== null) {
-    if (event.confirmedCount >= event.capacity) {
-      return { label: "Sold out", tone: "danger" };
-    }
-    if (event.confirmedCount / event.capacity >= 0.8) {
-      return { label: "Almost full", tone: "warning" };
-    }
+  if (event.capacity !== null && event.confirmedCount >= event.capacity) {
+    return { label: "Sold out", tone: "danger" };
   }
+
+  if (
+    isDateChanged(
+      { dateChangedAt: event.dateChangedAt ?? null, startsAt: event.startsAt },
+      now,
+    )
+  ) {
+    return { label: "Date changed", tone: "warning" };
+  }
+
+  if (event.capacity !== null && event.confirmedCount / event.capacity >= 0.8) {
+    return { label: "Almost full", tone: "warning" };
+  }
+
   const untilStart = event.startsAt.getTime() - now.getTime();
   if (untilStart > 0 && untilStart <= 2 * DAY) {
     return { label: "Sales end soon", tone: "info" };

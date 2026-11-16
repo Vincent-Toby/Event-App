@@ -22,7 +22,9 @@ import {
   CATEGORY_LABELS,
   type EventCategoryValue,
 } from "@/lib/event-categories";
+import { isDateChanged } from "@/lib/date-changed";
 import {
+  formatEventDate,
   formatPrice,
   getEventBadge,
   type EventBadge,
@@ -179,6 +181,11 @@ export function EventDetails({
       <InfoBlock icon={CalendarDays} title="Date and time">
         <p className="font-semibold">{when.date}</p>
         <p className="text-muted-foreground">{when.time}</p>
+        {event.previousStartsAt && isDateChanged(event, now) && (
+          <p className="inline-block rounded-md bg-brand-yellow/30 px-2 py-1 text-sm font-semibold">
+            Date changed. It was {formatEventDate(event.previousStartsAt, now)}.
+          </p>
+        )}
       </InfoBlock>
 
       <InfoBlock icon={event.isOnline ? Monitor : MapPin} title="Location">
