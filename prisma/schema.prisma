@@ -106,27 +106,29 @@ model Verification {
 }
 
 model Event {
-  id          String      @id @default(cuid())
-  slug        String      @unique
-  title       String
-  description String      @db.Text
-  imageUrl    String
-  venue       String
-  city        String?
-  isOnline    Boolean     @default(false)
-  tags        String[]
-  category    EventCategory
-  startsAt    DateTime
-  endsAt      DateTime?
-  capacity    Int? // null means unlimited
-  price       Int         @default(0) // smallest currency unit; 0 = free
-  currency    String      @default("USD")
-  status      EventStatus @default(PUBLISHED)
-  organizerId String
-  organizer   User        @relation(fields: [organizerId], references: [id], onDelete: Cascade)
-  bookings    Booking[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id               String        @id @default(cuid())
+  slug             String        @unique
+  title            String
+  description      String        @db.Text
+  imageUrl         String
+  venue            String
+  city             String?
+  isOnline         Boolean       @default(false)
+  tags             String[]
+  category         EventCategory
+  startsAt         DateTime
+  endsAt           DateTime?
+  capacity         Int? // null means unlimited
+  price            Int           @default(0) // smallest currency unit; 0 = free
+  currency         String        @default("USD")
+  status           EventStatus   @default(PUBLISHED)
+  dateChangedAt    DateTime?
+  previousStartsAt DateTime?
+  organizerId      String
+  organizer        User          @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  bookings         Booking[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   @@index([startsAt])
   @@index([organizerId])

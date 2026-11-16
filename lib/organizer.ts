@@ -63,11 +63,18 @@ export async function getOrganizerEvents(
     },
   });
 
-  const groups: OrganizerEventGroups = { upcoming: [], past: [], cancelled: [] };
+  const groups: OrganizerEventGroups = {
+    upcoming: [],
+    past: [],
+    cancelled: [],
+  };
 
   for (const row of rows) {
     const { _count, ...rest } = row;
-    const item: OrganizerEventItem = { ...rest, confirmedCount: _count.bookings };
+    const item: OrganizerEventItem = {
+      ...rest,
+      confirmedCount: _count.bookings,
+    };
     const end = item.endsAt ?? item.startsAt;
 
     if (item.status === "CANCELLED") groups.cancelled.push(item);
@@ -178,6 +185,7 @@ export async function getAttendees(
 // ---------- Changing ----------
 
 // Edits an event. Allowed until it starts. The event's link (slug) never changes.
+// If the start time moves (earlier or later), we remember when and from what.
 export async function updateEvent(
   userId: string,
   eventId: string,
@@ -232,6 +240,12 @@ export async function updateEvent(
         };
       }
 
+      // Compared to the minute, so saving an unchanged form never counts as a change.
+      const minute = 60_000;
+      const dateChanged =
+        Math.floor(input.startsAt.getTime() / minute) !==
+        Math.floor(event.startsAt.getTime() / minute);
+
       await tx.event.update({
         where: { id: eventId },
         data: {
@@ -247,10 +261,19 @@ export async function updateEvent(
           capacity: input.capacity ?? null,
           price: newPrice,
           ...(imageUrl ? { imageUrl } : {}),
+          ...(dateChanged
+            ? { dateChangedAt: now, previousStartsAt: event.startsAt }
+            : {}),
         },
       });
 
-      return { ok: true, slug: event.slug, message: "Your event has been updated." };
+      return {
+        ok: true,
+        slug: event.slug,
+        message: dateChanged
+          ? "Your event has been updated. The new date is flagged as changed."
+          : "Your event has been updated.",
+      };
     },
     { maxWait: 5000, timeout: 10000 },
   );
@@ -290,7 +313,11 @@ export async function cancelEvent(
     data: { status: "CANCELLED" },
   });
 
-  return { ok: true, slug: event.slug, message: "The event has been cancelled." };
+  return {
+    ok: true,
+    slug: event.slug,
+    message: "The event has been cancelled.",
+  };
 }
 
 // Deletes an event. Only allowed when nobody has a confirmed booking.
@@ -323,7 +350,11 @@ export async function deleteEvent(
       }
 
       await tx.event.delete({ where: { id: eventId } });
-      return { ok: true, slug: event.slug, message: "The event has been deleted." };
+      return {
+        ok: true,
+        slug: event.slug,
+        message: "The event has been deleted.",
+      };
     },
     { maxWait: 5000, timeout: 10000 },
   );
