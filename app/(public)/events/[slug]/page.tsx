@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,7 +14,40 @@ import { LogoLoader } from "@/components/logo-loader";
 import { getBookingStatus } from "@/lib/booking";
 import { getBookingState } from "@/lib/event-availability";
 import { getEventBySlug, getSimilarEvents } from "@/lib/event-detail";
+import { getEventMetadata } from "@/lib/event-metadata";
 import { getSession } from "@/lib/session";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const event = await getEventMetadata(slug);
+
+  if (!event) {
+    return { title: "Event", robots: { index: false, follow: false } };
+  }
+
+  return {
+    title: event.title,
+    description: event.description,
+    openGraph: {
+      type: "website",
+      title: event.title,
+      description: event.description,
+      images: [
+        { url: event.imageUrl, width: 1200, height: 630, alt: event.title },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: event.title,
+      description: event.description,
+      images: [event.imageUrl],
+    },
+  };
+}
 
 async function EventContent({
   params,
