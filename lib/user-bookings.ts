@@ -15,6 +15,8 @@ export type BookingListItem = {
   isOnline: boolean;
   startsAt: Date;
   endsAt: Date | null;
+  dateChangedAt: Date | null;
+  previousStartsAt: Date | null;
   price: number;
   currency: string;
   eventStatus: EventStatusValue;
@@ -51,6 +53,8 @@ export async function getUserBookings(
           isOnline: true,
           startsAt: true,
           endsAt: true,
+          dateChangedAt: true,
+          previousStartsAt: true,
           price: true,
           currency: true,
           status: true,
@@ -78,6 +82,8 @@ export async function getUserBookings(
       isOnline: event.isOnline,
       startsAt: event.startsAt,
       endsAt: event.endsAt,
+      dateChangedAt: event.dateChangedAt,
+      previousStartsAt: event.previousStartsAt,
       price: event.price,
       currency: event.currency,
       eventStatus: event.status,

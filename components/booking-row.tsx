@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CalendarDays, MapPin, User } from "lucide-react";
 import { CancelBookingButton } from "@/components/cancel-booking-button";
 import { Button } from "@/components/ui/button";
+import { isDateChanged } from "@/lib/date-changed";
 import { formatEventDate, formatPrice } from "@/lib/event-utils";
 import type { BookingListItem } from "@/lib/user-bookings";
 
@@ -39,6 +40,14 @@ export function BookingRow({
     group === "upcoming" &&
     item.status === "CONFIRMED" &&
     item.startsAt.getTime() > now.getTime();
+  // Only upcoming bookings need the warning that the date moved.
+  const dateChanged =
+    group === "upcoming" &&
+    item.previousStartsAt !== null &&
+    isDateChanged(
+      { dateChangedAt: item.dateChangedAt, startsAt: item.startsAt },
+      now,
+    );
 
   return (
     <article className="grid gap-4 rounded-2xl border bg-card p-3 sm:grid-cols-[14rem_minmax(0,1fr)]">
@@ -64,6 +73,11 @@ export function BookingRow({
             >
               {chip.label}
             </span>
+            {dateChanged && (
+              <span className="rounded-md bg-brand-yellow px-2 py-1 text-xs font-semibold text-foreground">
+                Date changed
+              </span>
+            )}
             <span className="text-xs font-semibold text-muted-foreground">
               Ref {item.ref}
             </span>
@@ -78,6 +92,11 @@ export function BookingRow({
               <CalendarDays className="size-4 shrink-0 text-primary" />
               {formatEventDate(item.startsAt, now)}
             </li>
+            {dateChanged && item.previousStartsAt && (
+              <li className="w-fit rounded-md bg-brand-yellow/30 px-2 py-1 font-semibold">
+                Date changed. It was {formatEventDate(item.previousStartsAt, now)}.
+              </li>
+            )}
             <li className="flex items-center gap-2 text-muted-foreground">
               <MapPin className="size-4 shrink-0" />
               <span className="truncate">{location}</span>
